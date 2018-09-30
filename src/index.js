@@ -1,3 +1,47 @@
 module.exports = function check(str, bracketsConfig) {
-  // your solution
+	if ( str.length % 2 ) {
+				return false;
+	}
+	let stack = [], form = {}, type = {};
+	for(let i=0; i<bracketsConfig.length;i++)
+	{
+		let open = bracketsConfig[i][0];
+		let close = bracketsConfig[i][1];
+		form[open] = close;
+		form[close] = open;
+		type[open] = "opened";
+		type[close] = "closed";
+	}
+
+
+	for (let i = 0; i < str.length; i++) {
+		let top = stack.length <= 0 ? null : stack[stack.length - 1];
+		let current = str[i];
+
+		if (type[current] == "opened") {
+			stack.push(current);
+		}
+		else if (type[current] == "closed" && current !== form[current] && stack.length == 0) {
+			return false;
+		}
+		else if (type[current] == "closed" && top !== form[current] && current !== form[current]) {
+			return false;
+		}
+		else if (type[current] == "closed" && top == form[current]) {
+			stack.pop();
+		}
+		else if (type[current] == "closed" && stack.length == 0 && current == form[current]) {
+			stack.push(current);
+		}
+		else if (type[current] == "closed" && stack.length > 0 && top == form[current]) {
+			stack.pop();
+		}
+		else if (type[current] == "closed" && stack.length > 0 && current == form[current]) {
+			stack.push(current);
+		}
+	}
+	if(stack.length==0)
+		return true;
+	else
+		return false;
 }
